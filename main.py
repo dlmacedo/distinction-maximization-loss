@@ -110,8 +110,8 @@ def main():
                 elif args.dataset == "cifar100":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 100
                     args.data_type = "image"
-
                 print("***************************************************************")
+
                 for args.execution in range(1, args.executions + 1):
                     print("\n\n\n################ EXECUTION:", args.execution, "OF", args.executions, "################")
                     args.best_model_file_path = os.path.join(args.experiment_path, "model" + str(args.execution) + ".pth")

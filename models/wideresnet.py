@@ -18,8 +18,7 @@ class wide_basic(nn.Module):
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != planes:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, planes, kernel_size=1, stride=stride, bias=True),
-            )
+                nn.Conv2d(in_planes, planes, kernel_size=1, stride=stride, bias=True))
 
     def forward(self, x):
         out = self.dropout(self.conv1(F.relu(self.bn1(x))))
@@ -45,6 +44,7 @@ class Wide_ResNet(nn.Module):
         self.layer2 = self._wide_layer(wide_basic, nStages[2], n, dropout_rate, stride=2)
         self.layer3 = self._wide_layer(wide_basic, nStages[3], n, dropout_rate, stride=2)
         self.bn1 = nn.BatchNorm2d(nStages[3], momentum=0.9)
+
         ##########################################################
         #self.linear = nn.Linear(nStages[3], num_classes)
         self.classifier = loss_first_part(nStages[3], num_classes)
@@ -74,10 +74,8 @@ class Wide_ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = F.relu(self.bn1(out))
-        ######################################
         #out = F.avg_pool2d(out, 8)
         out = F.avg_pool2d(out, out.size()[3])
-        ######################################
         out = out.view(out.size(0), -1)
         #out = self.linear(out)
         out = self.classifier(out)
@@ -89,10 +87,8 @@ class Wide_ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = F.relu(self.bn1(out))
-        ######################################
         #out = F.avg_pool2d(out, 8)
         out = F.avg_pool2d(out, out.size()[3])
-        ######################################
         features = out.view(out.size(0), -1)
         #out = self.linear(out)
         logits = self.classifier(features)

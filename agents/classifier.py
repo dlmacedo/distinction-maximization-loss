@@ -60,10 +60,8 @@ class ClassifierAgent:
                 self.criterion = loss_second_part(self.model.classifier, regularization=None)
 
         parameters = self.model.parameters()
-        self.optimizer = torch.optim.SGD(
-            parameters, lr=self.args.original_learning_rate, momentum=self.args.momentum, nesterov=True, weight_decay=args.weight_decay)
-        self.scheduler = torch.optim.lr_scheduler.MultiStepLR(
-            self.optimizer, milestones=self.args.learning_rate_decay_epochs, gamma=args.learning_rate_decay_rate)
+        self.optimizer = torch.optim.SGD(parameters, lr=self.args.original_learning_rate, momentum=self.args.momentum, nesterov=True, weight_decay=args.weight_decay)
+        self.scheduler = torch.optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=self.args.learning_rate_decay_epochs, gamma=args.learning_rate_decay_rate)
         print("\nTRAIN:", self.criterion, self.optimizer, self.scheduler)
 
     def train_classify(self):
@@ -325,7 +323,7 @@ class ClassifierAgent:
             epoch_metrics["max_probs"] += max_probs.tolist()
             epoch_metrics["max_logits"] += max_logits.tolist()
             epoch_metrics["mean_logits"] += mean_logits.tolist()
-            epoch_metrics["entropies"] += (entropies/math.log(self.args.number_of_model_classes)).tolist() # normalized entropy!!!
+            epoch_metrics["entropies"] += (entropies/math.log(self.args.number_of_model_classes)).tolist()
 
             self.optimizer.zero_grad()
             loss.backward()
@@ -434,15 +432,16 @@ class ClassifierAgent:
         self.extract_features_from_loader(self.trainset_loader_for_infer, features_trainset_file_path)
         self.extract_features_from_loader(self.valset_loader, features_valset_file_path)
 
-
     def extract_features_from_loader(self, loader, file_path):
         self.model.eval()
         print('Extract features on {}'.format(loader.dataset))
 
         with torch.no_grad():
             for batch_id, (input_tensor, target_tensor) in enumerate(tqdm(loader)):
+
                 input_tensor = input_tensor.cuda()
                 batch_logits, batch_features = self.model.logits_features(input_tensor)
+
                 if batch_id == 0:
                     logits = torch.Tensor(len(loader.sampler), self.args.number_of_model_classes)
                     features = torch.Tensor(len(loader.sampler), batch_features.size()[1])
@@ -450,6 +449,7 @@ class ClassifierAgent:
                     print("LOGITS:", logits.size())
                     print("FEATURES:", features.size())
                     print("TARGETS:", targets.size())
+
                 current_bsize = input_tensor.size(0)
                 from_ = int(batch_id * loader.batch_size)
                 to_ = int(from_ + current_bsize)

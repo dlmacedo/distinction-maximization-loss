@@ -132,8 +132,7 @@ class DisMaxLossSecondPart(nn.Module):
             if self.accumulated_batches == self.batches_to_accumulate:
                 partition_index = 0 if partition == "train" else 1
                 for index, percentile in enumerate([0, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100]):
-                    self.model_classifier.precomputed_thresholds[partition_index, index] = np.percentile(
-                        self.accumulated_scores[partition], percentile)
+                    self.model_classifier.precomputed_thresholds[partition_index, index] = np.percentile(self.accumulated_scores[partition], percentile)
                 print("In-Distribution-Based Precomputed Thresholds [Based on Train Set]:\n", self.model_classifier.precomputed_thresholds.data[0])
                 if self.model_classifier.validationset_available.data.item():
                     print("In-Distribution-Based Precomputed Thresholds [Based on Valid Set]:\n", self.model_classifier.precomputed_thresholds.data[1])

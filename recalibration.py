@@ -45,9 +45,8 @@ class ModelWithTemperature(nn.Module):
         # First: collect all the logits and labels for the validation set
         logits_list = []
         labels_list = []
-        ##############################
         self.model = self.model.cuda()
-        ##############################
+
         with torch.no_grad():
             for input, label in valid_loader:
                 #input = input
@@ -57,10 +56,8 @@ class ModelWithTemperature(nn.Module):
                 labels_list.append(label)
             logits = torch.cat(logits_list)
             labels = torch.cat(labels_list)
-        #####################
         logits = logits.cpu()
         labels = labels.cpu()
-        #####################
 
         # Calculate NLL and ECE before temperature scaling
         before_temperature_nll = nll_criterion(logits, labels).item()
@@ -70,7 +67,11 @@ class ModelWithTemperature(nn.Module):
         def ece_eval(tempearature):
             loss = ece_criterion.loss(logits.numpy()/tempearature,labels.numpy(),15)
             return loss
+
+        ##########################################################################################################
         temperature, ece, _ = opt.fmin_l_bfgs_b(ece_eval, np.array([1.0]), approx_grad=True, bounds=[(0.001,100)])
+        ##########################################################################################################
+
         print("temperature ====>>>>:", temperature[0])
         print("ece ============>>>>:", ece)
 

@@ -132,9 +132,11 @@ def detect(inloader, oodloader):
             # outputs are equal to logits, which in turn are equivalent to negative distances
             #score = outputs.max(dim=1)[0] # this is the minimum distance score
             # the minimum distance score is the best option for the IsoMax+ loss
+
             #############################################################################################################################
             scores = model.classifier.scores(outputs) # this returns the score considering the score type defined in the model.classifier
             #############################################################################################################################
+
             auroc.update(scores, targets) 
             auroctnt.add(scores, targets)           
         for _, (inputs, targets) in enumerate(oodloader):
@@ -149,9 +151,11 @@ def detect(inloader, oodloader):
             # outputs are equal to logits, which in turn are equivalent to negative distances
             #score = outputs.max(dim=1)[0] # this is the minimum distance score
             # the minimum distance score is the best option for the IsoMax+ loss
+
             #############################################################################################################################
             scores = model.classifier.scores(outputs) # this returns the score considering the score type defined in the model.classifier
             #############################################################################################################################
+
             auroc.update(scores, targets)            
             auroctnt.add(scores, targets)            
     return auroc.compute(), auroctnt.value()[0]

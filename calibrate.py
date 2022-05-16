@@ -10,7 +10,6 @@ import metrics
 import numpy as np
 import scipy.optimize as opt
 
-
 parser = argparse.ArgumentParser(description='Calibrator')
 parser.add_argument('--batch_size', type=int, default=64, metavar='N', help='batch size for data loader')
 parser.add_argument('--dataset', required=True, help='cifar10 | cifar100 | tinyimagenet')
@@ -79,6 +78,7 @@ def main():
         logits_list = []
         labels_list = []
         model = net_trained.cuda()
+
         with torch.no_grad():
             for input, label in testloader:
                 input = input.cuda()
@@ -87,12 +87,14 @@ def main():
                 labels_list.append(label)
             logits = torch.cat(logits_list)
             labels = torch.cat(labels_list)
+
         logits = logits.cpu()
         labels = labels.cpu()
 
         def ece_eval(tempearature):
             loss = ece_criterion.loss(logits.numpy()/tempearature,labels.numpy(),15)
             return loss
+
         temperature_for_min_ece, min_ece, _ = opt.fmin_l_bfgs_b(ece_eval, np.array([1.0]), approx_grad=True, bounds=[(0.001,100)])
 
         print("########################################")

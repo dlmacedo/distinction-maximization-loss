@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.special import softmax
 
-
 class CELoss(object):    
     def compute_bin_boundaries(self, probabilities = np.array([])):
 

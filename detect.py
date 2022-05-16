@@ -80,7 +80,7 @@ def main():
             scores = ["MDS"]
         elif args.loss.split("_")[0] == "dismax":
             loss_first_part = losses.DisMaxLossFirstPart
-            scores = ["MMLES"]
+            scores = ["MMLES","MPS"]
 
         # load networks
         if args.net_type == 'resnet34':
