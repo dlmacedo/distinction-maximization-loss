@@ -19,7 +19,6 @@ pd.set_option('display.width', 160)
 
 parser = argparse.ArgumentParser(description='Main')
 parser.add_argument('-x', '--executions', default=1, type=int, metavar='N', help='Number of executions (default: 1)')
-parser.add_argument('-w', '--workers', default=4, type=int, metavar='N', help='number of data loading workers (default: 4)')
 parser.add_argument('-e', '--epochs', default=300, type=int, metavar='N', help='number of total epochs to run')
 parser.add_argument('-bs', '--batch-size', default=64, type=int, metavar='N', help='mini-batch size (default: 64)')
 parser.add_argument('-lr', '--original-learning-rate', default=0.1, type=float, metavar='LR', help='initial learning rate')

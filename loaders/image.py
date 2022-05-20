@@ -43,7 +43,7 @@ class ImageLoader:
 
     def get_loaders(self):
         trainset_loader_for_train = DataLoader(
-            self.trainset_for_train, batch_size=self.args.batch_size, shuffle=True, worker_init_fn=lambda worker_id: random.seed(self.args.seed + worker_id))
+            self.trainset_for_train, batch_size=self.args.batch_size, shuffle=True, num_workers=8, worker_init_fn=lambda worker_id: random.seed(self.args.seed + worker_id))
         trainset_loader_for_infer = DataLoader(self.trainset_for_infer, batch_size=self.args.batch_size, shuffle=False)
         valset_loader = DataLoader(self.val_set, batch_size=self.args.batch_size, shuffle=False)
 
