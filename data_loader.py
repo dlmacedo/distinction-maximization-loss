@@ -11,13 +11,11 @@ def getSVHN(batch_size, TF, data_root='data', train=True, val=True, **kwargs):
     ds = []
     if train:
         train_loader = torch.utils.data.DataLoader(
-            datasets.SVHN(root=data_root, split='train', download=True, transform=TF),
-            batch_size=batch_size, shuffle=True)
+            datasets.SVHN(root=data_root, split='train', download=True, transform=TF), batch_size=batch_size, shuffle=True)
         ds.append(train_loader)
     if val:
         test_loader = torch.utils.data.DataLoader(
-            datasets.SVHN(root=data_root, split='test', download=True, transform=TF,),
-            batch_size=batch_size, shuffle=False)
+            datasets.SVHN(root=data_root, split='test', download=True, transform=TF,), batch_size=batch_size, shuffle=False)
         ds.append(test_loader)
     ds = ds[0] if len(ds) == 1 else ds
     return ds
@@ -30,13 +28,11 @@ def getCIFAR10(batch_size, TF, data_root='data', train=True, val=True, **kwargs)
     ds = []
     if train:
         train_loader = torch.utils.data.DataLoader(
-            datasets.CIFAR10(root=data_root, train=True, download=True, transform=TF),
-            batch_size=batch_size, shuffle=True)
+            datasets.CIFAR10(root=data_root, train=True, download=True, transform=TF), batch_size=batch_size, shuffle=True)
         ds.append(train_loader)
     if val:
         test_loader = torch.utils.data.DataLoader(
-            datasets.CIFAR10(root=data_root, train=False, download=True, transform=TF),
-            batch_size=batch_size, shuffle=False)
+            datasets.CIFAR10(root=data_root, train=False, download=True, transform=TF), batch_size=batch_size, shuffle=False)
         ds.append(test_loader)
     ds = ds[0] if len(ds) == 1 else ds
     return ds
@@ -49,13 +45,11 @@ def getCIFAR100(batch_size, TF, data_root='data', TTF=None, train=True, val=True
     ds = []
     if train:
         train_loader = torch.utils.data.DataLoader(
-            datasets.CIFAR100(root=data_root, train=True, download=True, transform=TF, target_transform=TTF),
-            batch_size=batch_size, shuffle=True)
+            datasets.CIFAR100(root=data_root, train=True, download=True, transform=TF, target_transform=TTF), batch_size=batch_size, shuffle=True)
         ds.append(train_loader)
     if val:
         test_loader = torch.utils.data.DataLoader(
-            datasets.CIFAR100(root=data_root, train=False, download=True, transform=TF, target_transform=TTF),
-            batch_size=batch_size, shuffle=False)
+            datasets.CIFAR100(root=data_root, train=False, download=True, transform=TF, target_transform=TTF), batch_size=batch_size, shuffle=False)
         ds.append(test_loader)
     ds = ds[0] if len(ds) == 1 else ds
     return ds
@@ -68,13 +62,11 @@ def getTINYIMAGENET(batch_size, TF, data_root='data', train=True, val=True, **kw
     ds = []
     if train:
         train_loader = torch.utils.data.DataLoader(
-            ImageFolder(os.path.join(data_root, 'train'), transform=TF),
-            batch_size=batch_size, shuffle=True)
+            ImageFolder(os.path.join(data_root, 'train'), transform=TF), batch_size=batch_size, shuffle=True)
         ds.append(train_loader)
     if val:
         test_loader = torch.utils.data.DataLoader(
-            ImageFolder(os.path.join(data_root, 'val'), transform=TF),
-            batch_size=batch_size, shuffle=False)
+            ImageFolder(os.path.join(data_root, 'val'), transform=TF), batch_size=batch_size, shuffle=False)
         ds.append(test_loader)
     ds = ds[0] if len(ds) == 1 else ds
     return ds

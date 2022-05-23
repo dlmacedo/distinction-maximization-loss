@@ -77,7 +77,6 @@ class ModelWithTemperature(nn.Module):
 
         return ece, temperature[0]
 
-
     def get_metrics(self, valid_loader):
         """
         valid_loader (DataLoader): validation set loader

@@ -486,7 +486,5 @@ class ClassifierAgent:
             print('Out-distribution: ' + out_dist)
             self.valset_loader = data_loader.getNonTargetDataSet(self.args, out_dist, self.args.batch_size, in_transform, "data")
             _, _, _, valid_epoch_logits, valid_epoch_metrics = self.validate_epoch(precompute_thresholds=False)
-            np.save(os.path.join(
-                self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_logits_"+out_dist+".npy"), valid_epoch_logits)
-            np.save(os.path.join(
-                self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_metrics_"+out_dist+".npy"), valid_epoch_metrics)
+            np.save(os.path.join(self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_logits_"+out_dist+".npy"), valid_epoch_logits)
+            np.save(os.path.join(self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_metrics_"+out_dist+".npy"), valid_epoch_metrics)

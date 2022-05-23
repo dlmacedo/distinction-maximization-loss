@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.special import softmax
 
+
 class CELoss(object):    
     def compute_bin_boundaries(self, probabilities = np.array([])):
 
@@ -12,9 +13,7 @@ class CELoss(object):
         else:
             #size of bins 
             bin_n = int(self.n_data/self.n_bins)
-
             bin_boundaries = np.array([])
-
             probabilities_sort = np.sort(probabilities)  
 
             for i in range(0,self.n_bins):
@@ -43,7 +42,6 @@ class CELoss(object):
         label_matrix = np.zeros([self.n_data,self.n_class])
         pred_matrix[idx,self.predictions] = 1
         label_matrix[idx,self.labels] = 1
-
         self.acc_matrix = np.equal(pred_matrix, label_matrix)
 
     def compute_bins(self, index = None):
@@ -70,6 +68,7 @@ class CELoss(object):
                 self.bin_conf[i] = np.mean(confidences[in_bin])
                 self.bin_score[i] = np.abs(self.bin_conf[i] - self.bin_acc[i])
 
+
 class MaxProbCELoss(CELoss):
     def loss(self, output, labels, n_bins = 15, logits = True):
         self.n_bins = n_bins
@@ -77,16 +76,19 @@ class MaxProbCELoss(CELoss):
         super().get_probabilities(output, labels, logits)
         super().compute_bins()
 
+
 #http://people.cs.pitt.edu/~milos/research/AAAI_Calibration.pdf
 class ECELoss(MaxProbCELoss):
     def loss(self, output, labels, n_bins = 15, logits = True):
         super().loss(output, labels, n_bins, logits)
         return np.dot(self.bin_prop,self.bin_score)
 
+
 class MCELoss(MaxProbCELoss): 
     def loss(self, output, labels, n_bins = 15, logits = True):
         super().loss(output, labels, n_bins, logits)
         return np.max(self.bin_score)
+
 
 #https://arxiv.org/abs/1905.11001
 #Overconfidence Loss (Good in high risk applications where confident but wrong predictions can be especially harmful)
@@ -114,6 +116,7 @@ class SCELoss(CELoss):
 
         return sce/self.n_class
 
+
 class TACELoss(CELoss):
     def loss(self, output, labels, threshold = 0.01, n_bins = 15, logits = True):
         tace = 0.0
@@ -131,6 +134,7 @@ class TACELoss(CELoss):
             tace += np.dot(self.bin_prop,self.bin_score)
 
         return tace/self.n_class
+
 
 #create TACELoss with threshold fixed at 0
 class ACELoss(TACELoss):
