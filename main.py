@@ -33,7 +33,6 @@ parser.add_argument('-ei', '--exps-inputs', default="", type=str, metavar='PATHS
 parser.add_argument('-et', '--exps-types', default="", type=str, metavar='EXPERIMENTS', help='Experiments types to be performed')
 parser.add_argument('-ec', '--exps-configs', default="", type=str, metavar='CONFIGS', help='Experiments configs to be used')
 parser.add_argument('-sd', '--seed', default=42, type=int, metavar='N', help='Seed (default: 42)')
-
 args = parser.parse_args()
 
 args.exps_inputs = args.exps_inputs.split(":")

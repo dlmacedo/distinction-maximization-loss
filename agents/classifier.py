@@ -68,7 +68,8 @@ class ClassifierAgent:
         if self.args.execution == 1:
             with open(self.args.executions_best_results_file_path, "w") as best_results:
                 best_results.write(
-                    "DATA,MODEL,LOSS,EXECUTION,EPOCH,TRAIN LOSS,TRAIN ACC1,TRAIN SCALE,"
+                    "DATA,MODEL,LOSS,EXECUTION,EPOCH,"
+                    "TRAIN LOSS,TRAIN ACC1,TRAIN SCALE,"
                     "TRAIN INTRA_LOGITS MEAN,TRAIN INTRA_LOGITS STD,TRAIN INTER_LOGITS MEAN,TRAIN INTER_LOGITS STD,"
                     "TRAIN MAX_PROBS MEAN,TRAIN MAX_PROBS STD,TRAIN ENTROPIES MEAN,TRAIN ENTROPIES STD,"
                     "VALID LOSS,VALID ACC1,VALID SCALE,"
@@ -125,71 +126,49 @@ class ClassifierAgent:
 
             with open(self.args.executions_raw_results_file_path, "a") as raw_results:
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "LOSS", train_loss))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "LOSS", train_loss))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "ACC1", train_acc1))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "ACC1", train_acc1))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "SCALE", train_scale))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "SCALE", train_scale))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "INTRA_LOGITS MEAN", train_intra_logits_mean))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "INTRA_LOGITS MEAN", train_intra_logits_mean))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "INTRA_LOGITS STD", train_intra_logits_std))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "INTRA_LOGITS STD", train_intra_logits_std))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "INTER_LOGITS MEAN", train_inter_logits_mean))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "INTER_LOGITS MEAN", train_inter_logits_mean))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "INTER_LOGITS STD", train_inter_logits_std))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "INTER_LOGITS STD", train_inter_logits_std))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "MAX_PROBS MEAN", train_max_probs_mean))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "MAX_PROBS MEAN", train_max_probs_mean))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "MAX_PROBS STD", train_max_probs_std))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "MAX_PROBS STD", train_max_probs_std))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "ENTROPIES MEAN", train_entropies_mean))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "ENTROPIES MEAN", train_entropies_mean))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "TRAIN", "ENTROPIES STD", train_entropies_std))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "TRAIN", "ENTROPIES STD", train_entropies_std))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "LOSS", valid_loss))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "LOSS", valid_loss))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "ACC1", valid_acc1))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "ACC1", valid_acc1))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "SCALE", valid_scale))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "SCALE", valid_scale))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "INTRA_LOGITS MEAN", valid_intra_logits_mean))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "INTRA_LOGITS MEAN", valid_intra_logits_mean))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "INTRA_LOGITS STD", valid_intra_logits_std))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "INTRA_LOGITS STD", valid_intra_logits_std))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "INTER_LOGITS MEAN", valid_inter_logits_mean))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "INTER_LOGITS MEAN", valid_inter_logits_mean))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "INTER_LOGITS STD", valid_inter_logits_std))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "INTER_LOGITS STD", valid_inter_logits_std))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "MAX_PROBS MEAN", valid_max_probs_mean))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "MAX_PROBS MEAN", valid_max_probs_mean))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "MAX_PROBS STD", valid_max_probs_std))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "MAX_PROBS STD", valid_max_probs_std))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "ENTROPIES MEAN", valid_entropies_mean))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "ENTROPIES MEAN", valid_entropies_mean))
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
-                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch,
-                    "VALID", "ENTROPIES STD", valid_entropies_std))
+                    self.args.dataset, self.args.model_name, self.args.loss, self.args.execution, self.epoch, "VALID", "ENTROPIES STD", valid_entropies_std))
 
             print()
             print("TRAIN ==>>\tIELM: {0:.8f}\tIELS: {1:.8f}\tIALM: {2:.8f}\tIALS: {3:.8f}".format(
@@ -232,17 +211,12 @@ class ClassifierAgent:
                     "VALID ENTROPIES MEAN": valid_entropies_mean,
                     "VALID ENTROPIES STD": valid_entropies_std,}
 
-                print("!+NEW BEST MODEL VALID ACC1:\t\t{0:.4f} IN EPOCH {1}! SAVING {2}\n".format(
-                    valid_acc1, self.epoch, self.args.best_model_file_path))
+                print("!+NEW BEST MODEL VALID ACC1:\t\t{0:.4f} IN EPOCH {1}! SAVING {2}\n".format(valid_acc1, self.epoch, self.args.best_model_file_path))
                 torch.save(self.model.state_dict(), self.args.best_model_file_path)
-                np.save(os.path.join(
-                    self.args.experiment_path, "best_model"+str(self.args.execution)+"_train_epoch_logits.npy"), train_epoch_logits)
-                np.save(os.path.join(
-                    self.args.experiment_path, "best_model"+str(self.args.execution)+"_train_epoch_metrics.npy"), train_epoch_metrics)
-                np.save(os.path.join(
-                    self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_logits.npy"), valid_epoch_logits)
-                np.save(os.path.join(
-                    self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_metrics.npy"), valid_epoch_metrics)
+                np.save(os.path.join(self.args.experiment_path, "best_model"+str(self.args.execution)+"_train_epoch_logits.npy"), train_epoch_logits)
+                np.save(os.path.join(self.args.experiment_path, "best_model"+str(self.args.execution)+"_train_epoch_metrics.npy"), train_epoch_metrics)
+                np.save(os.path.join(self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_logits.npy"), valid_epoch_logits)
+                np.save(os.path.join(self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_metrics.npy"), valid_epoch_metrics)
 
             print('!$$$$ BEST MODEL TRAIN ACC1:\t\t{0:.4f}'.format(best_model_results["TRAIN ACC1"]))
             print('!$$$$ BEST MODEL VALID ACC1:\t\t{0:.4f}'.format(best_model_results["VALID ACC1"]))
@@ -294,7 +268,6 @@ class ClassifierAgent:
 
             inputs = batch_data[0]
             targets = batch_data[1]
-
             inputs = inputs.cuda()
             targets = targets.cuda(non_blocking=True)
 
@@ -343,8 +316,7 @@ class ClassifierAgent:
                               inter_logits_mean=statistics.mean(inter_logits),
                               inter_logits_std=statistics.stdev(inter_logits),
                               intra_logits_mean=statistics.mean(intra_logits),
-                              intra_logits_std=statistics.stdev(intra_logits),
-                              ))
+                              intra_logits_std=statistics.stdev(intra_logits)))
 
         print('\n#### TRAIN ACC1:\t{0:.4f}\n'.format(accuracy_meter.value()[0]))
         return loss_meter.avg, accuracy_meter.value()[0], scale, epoch_logits, epoch_metrics
@@ -364,7 +336,6 @@ class ClassifierAgent:
 
                 inputs = batch_data[0]
                 targets = batch_data[1]
-
                 inputs = inputs.cuda()
                 targets = targets.cuda(non_blocking=True)
 
@@ -410,8 +381,7 @@ class ClassifierAgent:
                                   inter_logits_mean=statistics.mean(inter_logits),
                                   inter_logits_std=statistics.stdev(inter_logits),
                                   intra_logits_mean=statistics.mean(intra_logits),
-                                  intra_logits_std=statistics.stdev(intra_logits),
-                                  ))
+                                  intra_logits_std=statistics.stdev(intra_logits)))
 
         print('\n#### VALID ACC1:\t{0:.4f}\n'.format(accuracy_meter.value()[0]))
         return loss_meter.avg, accuracy_meter.value()[0], scale, epoch_logits, epoch_metrics
@@ -428,7 +398,6 @@ class ClassifierAgent:
 
         features_trainset_file_path = '{}.pth'.format(os.path.splitext(model_file_path)[0]+'_trainset')
         features_valset_file_path = '{}.pth'.format(os.path.splitext(model_file_path)[0]+'_valset')
-
         self.extract_features_from_loader(self.trainset_loader_for_infer, features_trainset_file_path)
         self.extract_features_from_loader(self.valset_loader, features_valset_file_path)
 

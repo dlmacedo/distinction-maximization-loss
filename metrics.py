@@ -1,3 +1,4 @@
+# Code reused from: https://github.com/Jonathan-Pearce/calibration_library
 import numpy as np
 from scipy.special import softmax
 
@@ -56,7 +57,6 @@ class CELoss(object):
         else:
             confidences = self.probabilities[:,index]
             accuracies = self.acc_matrix[:,index]
-
 
         for i, (bin_lower, bin_upper) in enumerate(zip(self.bin_lowers, self.bin_uppers)):
             # Calculated |confidence - accuracy| in each bin

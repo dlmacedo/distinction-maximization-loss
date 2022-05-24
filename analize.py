@@ -80,8 +80,7 @@ def main():
             print(model)
             df = best_results_data_frame.loc[
                 best_results_data_frame['DATA'].isin([data]) &
-                best_results_data_frame['MODEL'].isin([model])
-            ]
+                best_results_data_frame['MODEL'].isin([model])]
             df = df.rename(columns={
                 'VALID MAX_PROBS MEAN': 'MAX_PROBS', 'VALID ENTROPIES MEAN': 'ENTROPIES','VALID INTRA_LOGITS MEAN': 'INTRA_LOGITS', 'VALID INTER_LOGITS MEAN': 'INTER_LOGITS'})
             df = df.groupby(['LOSS'], as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1','ENTROPIES']].agg(['mean','std','count'])
@@ -114,8 +113,7 @@ def main():
                 best_results_data_frame['OUT-DATA'].isin(
                     ['svhn','lsun_resize','imagenet_resize','cifar10', 'cifar100',
                     'svhn_64', 'cifar10_64', 'cifar100_64', 'lsun_resize_64', 'imagenet-o-64',
-                    'imdb','multi30k','yelprf'])
-                ]
+                    'imdb','multi30k','yelprf'])]
 
             #############################################################################################################################
             #############################################################################################################################
@@ -161,8 +159,7 @@ def main():
             print(model)
             df = best_results_data_frame.loc[
                 best_results_data_frame['DATA'].isin([data]) &
-                best_results_data_frame['MODEL'].isin([model])
-            ]
+                best_results_data_frame['MODEL'].isin([model])]
             dft = df.groupby(['LOSS'], as_index=False)[['ECE']].agg(['mean','std','count'])
             dft = dft.sort_values([('ECE','mean')], ascending=True)
             print(dft)

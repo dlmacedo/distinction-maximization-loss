@@ -22,8 +22,8 @@ parser.add_argument('--gpu', type=int, default=0, help='gpu index')
 parser.add_argument('--loss', required=True, help='the loss used')
 parser.add_argument('--dir', default="", type=str, help='Part of the dir to use')
 parser.add_argument('-x', '--executions', default=1, type=int, metavar='N', help='Number of executions (default: 1)')
-
 args = parser.parse_args()
+
 torch.cuda.set_device(args.gpu)
 
 
@@ -40,13 +40,11 @@ def main():
 
     file_path = os.path.join(dir_path, "results_threshold.csv")
     with open(file_path, "w") as results_file:
-        results_file.write(
-            "EXECUTION,MODEL,IN-DATA,OUT-DATA,LOSS,SCORE,PERCENTILE,FPR,TPR,THRESHOLD\n")
+        results_file.write("EXECUTION,MODEL,IN-DATA,OUT-DATA,LOSS,SCORE,PERCENTILE,FPR,TPR,THRESHOLD\n")
 
     file_path2 = os.path.join(dir_path, "results_auroc.csv")
     with open(file_path2, "w") as results_file:
-        results_file.write(
-            "EXECUTION,MODEL,IN-DATA,OUT-DATA,LOSS,SCORE,AUROC\n")
+        results_file.write("EXECUTION,MODEL,IN-DATA,OUT-DATA,LOSS,SCORE,AUROC\n")
   
     # define number of classes
     if args.dataset == 'cifar100':
@@ -136,88 +134,58 @@ def main():
                 #Saving regular estimations (requires in-distribution data and out-distribution data):
                 with open(file_path, "a") as results_file:
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "0", fpr_list[0], tpr_list[0], 0))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "0", fpr_list[0], tpr_list[0], 0))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "0.1", fpr_list[1], tpr_list[1], 1))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "0.1", fpr_list[1], tpr_list[1], 1))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "0.2", fpr_list[2], tpr_list[2], 2))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "0.2", fpr_list[2], tpr_list[2], 2))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "0.3", fpr_list[3], tpr_list[3], 3))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "0.3", fpr_list[3], tpr_list[3], 3))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "0.4", fpr_list[4], tpr_list[4], 4))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "0.4", fpr_list[4], tpr_list[4], 4))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "0.5", fpr_list[5], tpr_list[5], 5))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "0.5", fpr_list[5], tpr_list[5], 5))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "1", fpr_list[6], tpr_list[6], 6))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "1", fpr_list[6], tpr_list[6], 6))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "2", fpr_list[7], tpr_list[7], 7))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "2", fpr_list[7], tpr_list[7], 7))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "3", fpr_list[8], tpr_list[8], 8))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "3", fpr_list[8], tpr_list[8], 8))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "4", fpr_list[9], tpr_list[9], 9))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "4", fpr_list[9], tpr_list[9], 9))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "5", fpr_list[10], tpr_list[10], 10))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "5", fpr_list[10], tpr_list[10], 10))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "10", fpr_list[11], tpr_list[11], 11))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "10", fpr_list[11], tpr_list[11], 11))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "15", fpr_list[12], tpr_list[12], 12))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "15", fpr_list[12], tpr_list[12], 12))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "20", fpr_list[13], tpr_list[13], 13))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "20", fpr_list[13], tpr_list[13], 13))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "25", fpr_list[14], tpr_list[14], 14))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "25", fpr_list[14], tpr_list[14], 14))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "30", fpr_list[15], tpr_list[15], 15))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "30", fpr_list[15], tpr_list[15], 15))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "35", fpr_list[16], tpr_list[16], 16))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "35", fpr_list[16], tpr_list[16], 16))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "40", fpr_list[17], tpr_list[17], 17))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "40", fpr_list[17], tpr_list[17], 17))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "45", fpr_list[18], tpr_list[18], 18))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "45", fpr_list[18], tpr_list[18], 18))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "50", fpr_list[19], tpr_list[19], 19))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "50", fpr_list[19], tpr_list[19], 19))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "60", fpr_list[20], tpr_list[20], 20))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "60", fpr_list[20], tpr_list[20], 20))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "70", fpr_list[21], tpr_list[21], 21))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "70", fpr_list[21], tpr_list[21], 21))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "80", fpr_list[22], tpr_list[22], 22))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "80", fpr_list[22], tpr_list[22], 22))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "90", fpr_list[23], tpr_list[23], 23))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "90", fpr_list[23], tpr_list[23], 23))
                     results_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist,
-                        str(args.loss), score, "100", fpr_list[24], tpr_list[24], 24))
+                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, "100", fpr_list[24], tpr_list[24], 24))
 
-                ##################################################################################################
-                ##################################################################################################
                 with open(file_path2, "a") as results_file:
-                    results_file.write("{},{},{},{},{},{},{}\n".format(
-                        str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, auroc))
-                ##################################################################################################
-                ##################################################################################################
+                    results_file.write("{},{},{},{},{},{},{}\n".format(str(args.execution), args.net_type, args.dataset, out_dist, str(args.loss), score, auroc))
 
 
 def detect(model, inloader, oodloader, score_type):

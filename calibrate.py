@@ -19,8 +19,8 @@ parser.add_argument('--gpu', type=int, default=0, help='gpu index')
 parser.add_argument('--loss', required=True, help='the loss used')
 parser.add_argument('--dir', default="", type=str, help='Part of the dir to use')
 parser.add_argument('-x', '--executions', default=1, type=int, metavar='N', help='Number of executions (default: 1)')
-
 args = parser.parse_args()
+
 torch.cuda.set_device(args.gpu)
 
 
@@ -95,7 +95,9 @@ def main():
             loss = ece_criterion.loss(logits.numpy()/tempearature,labels.numpy(),15)
             return loss
 
+        ##########################################################################################################################
         temperature_for_min_ece, min_ece, _ = opt.fmin_l_bfgs_b(ece_eval, np.array([1.0]), approx_grad=True, bounds=[(0.001,100)])
+        ##########################################################################################################################
 
         print("########################################")
         print("Min ECE", min_ece)
