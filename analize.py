@@ -82,7 +82,8 @@ def main():
                 best_results_data_frame['DATA'].isin([data]) &
                 best_results_data_frame['MODEL'].isin([model])]
             df = df.rename(columns={
-                'VALID MAX_PROBS MEAN': 'MAX_PROBS', 'VALID ENTROPIES MEAN': 'ENTROPIES','VALID INTRA_LOGITS MEAN': 'INTRA_LOGITS', 'VALID INTER_LOGITS MEAN': 'INTER_LOGITS'})
+                'VALID MAX_PROBS MEAN': 'MAX_PROBS', 'VALID ENTROPIES MEAN': 'ENTROPIES',
+                'VALID INTRA_LOGITS MEAN': 'INTRA_LOGITS', 'VALID INTER_LOGITS MEAN': 'INTER_LOGITS'})
             df = df.groupby(['LOSS'], as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1','ENTROPIES']].agg(['mean','std','count'])
             df = df.sort_values([('VALID ACC1','mean')], ascending=False)
             print(df)

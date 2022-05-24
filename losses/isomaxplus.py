@@ -16,7 +16,8 @@ class IsoMaxPlusLossFirstPart(nn.Module):
         nn.init.constant_(self.distance_scale, 1.0)
 
     def forward(self, features):
-        distances_from_normalized_vectors = torch.cdist(F.normalize(features), F.normalize(self.prototypes), p=2.0, compute_mode="donot_use_mm_for_euclid_dist")       
+        distances_from_normalized_vectors = torch.cdist(
+            F.normalize(features), F.normalize(self.prototypes), p=2.0, compute_mode="donot_use_mm_for_euclid_dist")       
         isometric_distances = torch.abs(self.distance_scale) * distances_from_normalized_vectors
         logits = -isometric_distances
         # The temperature may be calibrated after training to improve uncertainty estimation.

@@ -23,7 +23,8 @@ class DisMaxLossFirstPart(nn.Module):
         self.score_type = "MMLES"
 
     def forward(self, features):
-        distances_from_normalized_vectors = torch.cdist(F.normalize(features), F.normalize(self.prototypes), p=2.0, compute_mode="donot_use_mm_for_euclid_dist") / math.sqrt(2.0)    
+        distances_from_normalized_vectors = torch.cdist(
+            F.normalize(features), F.normalize(self.prototypes), p=2.0, compute_mode="donot_use_mm_for_euclid_dist") / math.sqrt(2.0)    
         isometric_distances = torch.abs(self.distance_scale) * distances_from_normalized_vectors
         logits = -(isometric_distances + isometric_distances.mean(dim=1, keepdim=True))
         # The temperature may be calibrated after training to improve uncertainty estimation.

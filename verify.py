@@ -37,11 +37,9 @@ def main():
     print(args)
 
     dir_path = os.path.join("experiments", args.dir, "train_classify", "data~"+args.dataset+"+model~"+args.net_type+"+loss~"+str(args.loss))
-
     file_path = os.path.join(dir_path, "results_threshold.csv")
     with open(file_path, "w") as results_file:
         results_file.write("EXECUTION,MODEL,IN-DATA,OUT-DATA,LOSS,SCORE,PERCENTILE,FPR,TPR,THRESHOLD\n")
-
     file_path2 = os.path.join(dir_path, "results_auroc.csv")
     with open(file_path2, "w") as results_file:
         results_file.write("EXECUTION,MODEL,IN-DATA,OUT-DATA,LOSS,SCORE,AUROC\n")
@@ -236,8 +234,7 @@ def detect(model, inloader, oodloader, score_type):
                 scores = logits.max(dim=1)[0] + logits.mean(dim=1) + (probabilities * torch.log(probabilities)).sum(dim=1) + probabilities.max(dim=1)[0]
 
             auroc.update(scores, targets)            
-            roc.update(scores, targets)
-        
+            roc.update(scores, targets)        
     return auroc.compute(), roc.compute()
 
 
