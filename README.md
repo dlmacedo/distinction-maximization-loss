@@ -6,12 +6,15 @@
 
 Building robust deterministic deep neural networks is still a challenge. On the one hand, some approaches improve out-of-distribution detection at the cost of reducing classification accuracy in some situations. On the other hand, some methods simultaneously increase classification accuracy, out-of-distribution detection, and uncertainty estimation but reduce inference efficiency in addition to requiring training the same model many times to tune hyperparameters. In this paper, we propose training deterministic deep neural networks using our DisMax loss, which works as a drop-in replacement for the commonly used SoftMax loss (i.e., the combination of the linear output layer, the SoftMax activation, and the cross-entropy loss). Starting from IsoMax+ loss, we created novel logits that are based on the distance to all prototypes rather than just the one associated with the correct class. We also propose a novel way to augment images to construct what we call fractional probability regularization. Moreover, we propose a new score to perform out-of-distribution detection and a fast way to calibrate the network after training. Our experiments show that DisMax usually outperforms all current approaches simultaneously in classification accuracy, uncertainty estimation, inference efficiency, and out-of-distribution detection, avoiding hyperparameter tuning and repetitive model training.
 
- <img align="center" src="assets/results.png" width="750">
-
 >>**Read the full paper: [Distinction Maximization Loss: Efficiently Improving Classification Accuracy, Uncertainty Estimation, and Out-of-Distribution Detection Simply Replacing the Loss and Calibrating](https://arxiv.org/abs/2205.05874).**
 
+>>**Visit also the repository of our previous work: [Entropic Out-of-Distribution Detection](https://github.com/dlmacedo/entropic-out-of-distribution-detection).**
 
->>**Visit the repository of our previous work: [Entropic Out-of-Distribution Detection](https://github.com/dlmacedo/entropic-out-of-distribution-detection).**
+ <img align="center" src="assets/results.png" width="750">
+
+___
+
+>> :warning: **If you plan to use DisMax with large size images (e.g., ImageNet), try also DisMax<sup>$\dagger$</sup> (DisMax without FPR augmentation)! In such cases, our preliminary results appear to show that DisMax<sup>$\dagger$</sup> outperforms DisMax and MMLES is better than MPS also for near OOD.**
 
 ___
 
@@ -60,6 +63,7 @@ scores = model.classifier.scores(outputs)
 ```
 python example.py
 ```
+
 ___
 
 # Code
