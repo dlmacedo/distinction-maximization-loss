@@ -14,7 +14,7 @@ Building robust deterministic deep neural networks is still a challenge. On the 
 
 ___
 
->> **If you plan to use DisMax with large size images (e.g., ImageNet), try also DisMax<sup>$\dagger$</sup> (DisMax without FPR augmentation)! In such cases, our preliminary results appear to show that DisMax<sup>$\dagger$</sup> outperforms DisMax and MMLES is better than MPS also for near OOD.**
+>> **If you plan to use DisMax with large size images (e.g., ImageNet), try also DisMax<sup>$\dagger$</sup> (DisMax without FPR augmentation)! In such cases, our preliminary results appear to show that DisMax<sup>$\dagger$</sup> outperforms DisMax in Uncertainty Estimation and OOD. Moreover, MMLES is better than MPS also for near OOD.**
 
 ___
 
