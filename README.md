@@ -15,7 +15,7 @@ Building robust deterministic deep neural networks is still a challenge. On the 
 ___
 
 
->>>> ***To maximize the overall performance (at the cost of requiring validation by training the same model many times), you may now tune the hyperparameter $\alpha$. Considering OOD is related to the expected calibration error (ECE), minimizing the ECE using the provided code is recommended to bypass requiring access to OOD data.***
+>>>> ***To maximize the overall performance (at the cost of requiring validation by training the same model many times), you may now tune the hyperparameter alpha. Considering OOD is related to the expected calibration error (ECE), minimizing the ECE using the provided code is recommended to bypass requiring access to OOD data.***
 
 ___
 
