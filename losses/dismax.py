@@ -54,9 +54,10 @@ class DisMaxLossFirstPart(nn.Module):
 
 class DisMaxLossSecondPart(nn.Module):
     """This part replaces the nn.CrossEntropyLoss()"""
-    def __init__(self, model_classifier, regularization="fractional_probability", batches_to_accumulate=32):
+    def __init__(self, model_classifier, regularization="fractional_probability", alpha=1.0, batches_to_accumulate=32):
         super(DisMaxLossSecondPart, self).__init__()
         self.model_classifier = model_classifier
+        self.alpha = alpha
         self.regularization = regularization
         self.batches_to_accumulate = batches_to_accumulate
         self.entropic_scale = 10
@@ -114,7 +115,7 @@ class DisMaxLossSecondPart(nn.Module):
                     loss_regularization = F.kl_div(torch.log(probabilities_for_training[half_batch_size:]), target_distributions_total, reduction='batchmean')
                 else:
                     sys.exit('You should pass a valid regularization!!!')
-                loss = (loss_not_regularized + loss_regularization)/2
+                loss = (loss_not_regularized + (self.alpha * loss_regularization))/2
 
         else: # validation
             partition = "validation"

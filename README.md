@@ -14,7 +14,8 @@ Building robust deterministic deep neural networks is still a challenge. On the 
 
 ___
 
->> **If you plan to use DisMax with large size images, try also DisMax<sup>$\dagger$</sup> (DisMax without FPR augmentation)! In such cases, our preliminary results appear to show that DisMax<sup>$\dagger$</sup> outperforms DisMax and MMLES is better than MPS also to near OOD.**
+
+>>>> ***To maximize the overall performance (at the cost of requiring validation by training the same model many times), you may now tune the hyperparameter $\alpha$. Considering OOD is related to the expected calibration error (ECE), minimizing the ECE using the provided code is recommended to bypass requiring access to OOD data.***
 
 ___
 
