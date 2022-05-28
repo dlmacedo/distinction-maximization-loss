@@ -65,19 +65,18 @@ class DisMaxLossSecondPart(nn.Module):
         self.accumulated_scores = {"train": None, "validation": None}
 
     def preprocess(self, inputs, targets):
+        batch_size = inputs.size(0)
+        half_batch_size = batch_size//2
+        W = inputs.size(2)
+        H = inputs.size(3)
+        idx = torch.randperm(batch_size)
+        inputs = inputs[idx].view(inputs.size())
+        targets = targets[idx].view(targets.size())
         if self.regularization == "fractional_probability":
-            batch_size = inputs.size(0)
-            half_batch_size = batch_size//2
-            idx = torch.randperm(batch_size)
-            inputs = inputs[idx].view(inputs.size())
-            targets = targets[idx].view(targets.size())
-            if len(inputs.size()) == 4:
-                W = inputs.size(2)
-                H = inputs.size(3)
-                #print("Regularization: Fractional Probability")
-                inputs[half_batch_size:, :, W//2:, :H//2] = torch.roll(inputs[half_batch_size:, :, W//2:, :H//2], 1, 0)
-                inputs[half_batch_size:, :, :W//2, H//2:] = torch.roll(inputs[half_batch_size:, :, :W//2, H//2:], 2, 0)
-                inputs[half_batch_size:, :, W//2:, H//2:] = torch.roll(inputs[half_batch_size:, :, W//2:, H//2:], 3, 0)
+            #print("Regularization: Fractional Probability")
+            inputs[half_batch_size:, :, W//2:, :H//2] = torch.roll(inputs[half_batch_size:, :, W//2:, :H//2], 1, 0)
+            inputs[half_batch_size:, :, :W//2, H//2:] = torch.roll(inputs[half_batch_size:, :, :W//2, H//2:], 2, 0)
+            inputs[half_batch_size:, :, W//2:, H//2:] = torch.roll(inputs[half_batch_size:, :, W//2:, H//2:], 3, 0)
         return inputs, targets
 
     def forward(self, logits, targets, debug=False, precompute_thresholds=False):
