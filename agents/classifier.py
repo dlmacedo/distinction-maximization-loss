@@ -58,6 +58,10 @@ class ClassifierAgent:
         if self.args.loss.split("_")[0].startswith("dismax"):
             if self.args.loss.split("_")[3].startswith("noreg"):
                 self.criterion = loss_second_part(self.model.classifier, regularization=None)
+            if self.args.loss.split("_")[3].startswith("0.5"):
+                self.criterion = loss_second_part(self.model.classifier, alpha=0.5)
+            if self.args.loss.split("_")[3].startswith("0.25"):
+                self.criterion = loss_second_part(self.model.classifier, alpha=0.25)
 
         parameters = self.model.parameters()
         self.optimizer = torch.optim.SGD(parameters, lr=self.args.original_learning_rate, momentum=self.args.momentum, nesterov=True, weight_decay=args.weight_decay)

@@ -73,7 +73,6 @@ class DisMaxLossSecondPart(nn.Module):
         inputs = inputs[idx].view(inputs.size())
         targets = targets[idx].view(targets.size())
         if self.regularization == "fractional_probability":
-            #print("Regularization: Fractional Probability")
             inputs[half_batch_size:, :, W//2:, :H//2] = torch.roll(inputs[half_batch_size:, :, W//2:, :H//2], 1, 0)
             inputs[half_batch_size:, :, :W//2, H//2:] = torch.roll(inputs[half_batch_size:, :, :W//2, H//2:], 2, 0)
             inputs[half_batch_size:, :, W//2:, H//2:] = torch.roll(inputs[half_batch_size:, :, W//2:, H//2:], 3, 0)
@@ -101,7 +100,6 @@ class DisMaxLossSecondPart(nn.Module):
                 probabilities_at_targets = probabilities_for_training[range(half_batch_size), targets[:half_batch_size]]
                 loss_not_regularized = -torch.log(probabilities_at_targets).mean()
                 if self.regularization == "fractional_probability":
-                    #print("Regularization: Fractional Probability")
                     targets_one_hot_0 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 0, 0)].long().cuda()
                     targets_one_hot_1 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 1, 0)].long().cuda()
                     targets_one_hot_2 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 2, 0)].long().cuda()
@@ -134,11 +132,11 @@ class DisMaxLossSecondPart(nn.Module):
                 partition_index = 0 if partition == "train" else 1
                 for index, percentile in enumerate([0, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100]):
                     self.model_classifier.precomputed_thresholds[partition_index, index] = np.percentile(self.accumulated_scores[partition], percentile)
+                self.accumulated_scores[partition] = None
+                self.accumulated_batches = 0
                 print("In-Distribution-Based Precomputed Thresholds [Based on Train Set]:\n", self.model_classifier.precomputed_thresholds.data[0])
                 if self.model_classifier.validationset_available.data.item():
                     print("In-Distribution-Based Precomputed Thresholds [Based on Valid Set]:\n", self.model_classifier.precomputed_thresholds.data[1])
-                self.accumulated_scores[partition] = None
-                self.accumulated_batches = 0
 
         if not debug:
             return loss
