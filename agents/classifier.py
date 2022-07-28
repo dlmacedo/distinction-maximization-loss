@@ -9,8 +9,6 @@ import math
 import torchnet as tnt
 import numpy as np
 import utils
-import data_loader
-from tqdm import tqdm
 from torchvision import transforms
 import timm
 
