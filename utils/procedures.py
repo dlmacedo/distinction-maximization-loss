@@ -171,7 +171,7 @@ def print_num_params(model, display_all_modules=False):
             num_params *= s
         if display_all_modules: print("{}: {}".format(n, num_params))
         total_num_params += num_params
-    print("total number of parameters: {:.2e}".format(total_num_params))
+    print("total number of parameters: {:.3e}".format(total_num_params))
 
 
 def lerp(a,b,x):

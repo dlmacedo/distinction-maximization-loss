@@ -12,7 +12,7 @@ import utils
 import data_loader
 from tqdm import tqdm
 from torchvision import transforms
-
+import timm
 
 class ClassifierAgent:
     def __init__(self, args):
@@ -41,27 +41,42 @@ class ClassifierAgent:
 
         if self.args.model_name == "resnet34":
             self.model = models.ResNet34(num_c=self.args.number_of_model_classes, loss_first_part=loss_first_part)
+            self.model_classifier = self.model.classifier
         elif self.args.model_name == "densenetbc100":
             self.model = models.DenseNet3(100, int(self.args.number_of_model_classes), loss_first_part=loss_first_part)
+            self.model_classifier = self.model.classifier
         elif self.args.model_name == "wideresnet2810":
             self.model = models.Wide_ResNet(depth=28, widen_factor=10, num_classes=self.args.number_of_model_classes, loss_first_part=loss_first_part)
+            self.model_classifier = self.model.classifier
+        elif self.args.model_name == "resnet50":
+            self.model = timm.create_model('resnet50', pretrained=False)
+            print(self.model.default_cfg)
+            num_in_features = self.model.get_classifier().in_features
+            self.model.fc = loss_first_part(num_in_features, self.args.number_of_model_classes)
+            self.model_classifier = self.model.fc
+        elif self.args.model_name == "resnet18":
+            self.model = timm.create_model('resnet18', pretrained=False)
+            print(self.model.default_cfg)
+            num_in_features = self.model.get_classifier().in_features
+            self.model.fc = loss_first_part(num_in_features, self.args.number_of_model_classes)
+            self.model_classifier = self.model.fc
         self.model.cuda()
 
         print("\nMODEL:", self.model)
         with open(os.path.join(self.args.experiment_path, 'model.arch'), 'w') as file:
             print(self.model, file=file)
-        print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         utils.print_num_params(self.model)
-        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
        
-        self.criterion = loss_second_part(self.model.classifier)   
+        self.criterion = loss_second_part(self.model_classifier)   
         if self.args.loss.split("_")[0].startswith("dismax"):
-            if self.args.loss.split("_")[3].startswith("noreg"):
-                self.criterion = loss_second_part(self.model.classifier, regularization=None)
+            if self.args.loss.split("_")[3].startswith("fpr"):
+                self.criterion = loss_second_part(self.model_classifier, regularization="fpr")
             if self.args.loss.split("_")[3].startswith("0.5"):
-                self.criterion = loss_second_part(self.model.classifier, alpha=0.5)
+                self.criterion = loss_second_part(self.model_classifier, regularization="fpr", alpha=0.5)
             if self.args.loss.split("_")[3].startswith("0.25"):
-                self.criterion = loss_second_part(self.model.classifier, alpha=0.25)
+                self.criterion = loss_second_part(self.model_classifier, regularization="fpr", alpha=0.25)
 
         parameters = self.model.parameters()
         self.optimizer = torch.optim.SGD(parameters, lr=self.args.original_learning_rate, momentum=self.args.momentum, nesterov=True, weight_decay=args.weight_decay)
@@ -255,8 +270,6 @@ class ClassifierAgent:
                 best_model_results["VALID ENTROPIES MEAN"],
                 best_model_results["VALID ENTROPIES STD"],))
 
-        self.extract_features_for_all_sets(self.args.best_model_file_path)
-        print()
 
     def train_epoch(self):
         print()
@@ -277,6 +290,7 @@ class ClassifierAgent:
 
             if self.args.loss.split("_")[0] in ["dismax"]:
                 inputs, targets = self.criterion.preprocess(inputs, targets)                      
+
             outputs = self.model(inputs)
             loss, scale, inter_logits, intra_logits = self.criterion(outputs, targets, debug=True)
 
@@ -343,7 +357,7 @@ class ClassifierAgent:
                 inputs = inputs.cuda()
                 targets = targets.cuda(non_blocking=True)
 
-                outputs = self.model(inputs)                      
+                outputs = self.model(inputs)
                 if self.args.loss.split("_")[0] in ["dismax"]:
                     loss, scale, inter_logits, intra_logits = self.criterion(outputs, targets, debug=True, precompute_thresholds=precompute_thresholds)
                 else:
@@ -389,75 +403,3 @@ class ClassifierAgent:
 
         print('\n#### VALID ACC1:\t{0:.4f}\n'.format(accuracy_meter.value()[0]))
         return loss_meter.avg, accuracy_meter.value()[0], scale, epoch_logits, epoch_metrics
-
-    def extract_features_for_all_sets(self, model_file_path):
-        print("\n################ EXTRACTING FEATURES ################")
-        if os.path.isfile(model_file_path):
-            print("\n=> loading checkpoint '{}'".format(model_file_path))
-            self.model.load_state_dict(torch.load(model_file_path, map_location="cuda:" + str(self.args.gpu_id)))
-            print("=> loaded checkpoint '{}'".format(model_file_path))
-        else:
-            print("=> no checkpoint found at '{}'".format(model_file_path))
-            return
-
-        features_trainset_file_path = '{}.pth'.format(os.path.splitext(model_file_path)[0]+'_trainset')
-        features_valset_file_path = '{}.pth'.format(os.path.splitext(model_file_path)[0]+'_valset')
-        self.extract_features_from_loader(self.trainset_loader_for_infer, features_trainset_file_path)
-        self.extract_features_from_loader(self.valset_loader, features_valset_file_path)
-
-    def extract_features_from_loader(self, loader, file_path):
-        self.model.eval()
-        print('Extract features on {}'.format(loader.dataset))
-
-        with torch.no_grad():
-            for batch_id, (input_tensor, target_tensor) in enumerate(tqdm(loader)):
-
-                input_tensor = input_tensor.cuda()
-                batch_logits, batch_features = self.model.logits_features(input_tensor)
-
-                if batch_id == 0:
-                    logits = torch.Tensor(len(loader.sampler), self.args.number_of_model_classes)
-                    features = torch.Tensor(len(loader.sampler), batch_features.size()[1])
-                    targets = torch.Tensor(len(loader.sampler))
-                    print("LOGITS:", logits.size())
-                    print("FEATURES:", features.size())
-                    print("TARGETS:", targets.size())
-
-                current_bsize = input_tensor.size(0)
-                from_ = int(batch_id * loader.batch_size)
-                to_ = int(from_ + current_bsize)
-                logits[from_:to_] = batch_logits.cpu()
-                features[from_:to_] = batch_features.cpu()
-                targets[from_:to_] = target_tensor
-
-        os.system('mkdir -p {}'.format(os.path.dirname(file_path)))
-        print('save ' + file_path)
-        torch.save((logits, features, targets), file_path)
-        return logits, features, targets
-
-    def extract_ood_logits_metrics(self):
-        print("\n################ INFERING ################")
-        if os.path.isfile(self.args.best_model_file_path):
-            print("\n=> loading checkpoint '{}'".format(self.args.best_model_file_path))
-            self.model.load_state_dict(torch.load(self.args.best_model_file_path, map_location="cuda:" + str(self.args.gpu_id)))
-            print("=> loaded checkpoint '{}'".format(self.args.best_model_file_path))
-        else:
-            print("=> no checkpoint found at '{}'".format(self.args.best_model_file_path))
-            return
-
-        if self.args.dataset == 'cifar10':
-            in_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.491, 0.482, 0.446), (0.247, 0.243, 0.261))])
-        elif self.args.dataset == 'cifar100':
-            in_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.507, 0.486, 0.440), (0.267, 0.256, 0.276))])
-
-        if self.args.dataset == 'cifar10':
-            out_dist_list = ['cifar100', 'imagenet_resize', 'lsun_resize', 'svhn']
-        elif self.args.dataset == 'cifar100':
-            out_dist_list = ['cifar10', 'imagenet_resize', 'lsun_resize', 'svhn']
-
-        for out_dist in out_dist_list:
-            print('Out-distribution: ' + out_dist)
-            self.valset_loader = data_loader.getNonTargetDataSet(self.args, out_dist, self.args.batch_size, in_transform, "data")
-            _, _, _, valid_epoch_logits, valid_epoch_metrics = self.validate_epoch(precompute_thresholds=False)
-            np.save(os.path.join(self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_logits_"+out_dist+".npy"), valid_epoch_logits)
-            np.save(os.path.join(self.args.experiment_path, "best_model"+str(self.args.execution)+"_valid_epoch_metrics_"+out_dist+".npy"), valid_epoch_metrics)

@@ -51,10 +51,13 @@ class DisMaxLossFirstPart(nn.Module):
             sys.exit('You should use a valid score type!!!')
         return scores
 
+    def extra_repr(self):
+        return 'num_features={}, num_classes={}'.format(self.num_features, self.num_classes)
+
 
 class DisMaxLossSecondPart(nn.Module):
     """This part replaces the nn.CrossEntropyLoss()"""
-    def __init__(self, model_classifier, regularization="fractional_probability", alpha=1.0, batches_to_accumulate=32):
+    def __init__(self, model_classifier, regularization=None, alpha=1.0, batches_to_accumulate=32):
         super(DisMaxLossSecondPart, self).__init__()
         self.model_classifier = model_classifier
         self.alpha = alpha
@@ -72,7 +75,8 @@ class DisMaxLossSecondPart(nn.Module):
         idx = torch.randperm(batch_size)
         inputs = inputs[idx].view(inputs.size())
         targets = targets[idx].view(targets.size())
-        if self.regularization == "fractional_probability":
+        if self.regularization == "fpr":
+            print("fpr1")
             inputs[half_batch_size:, :, W//2:, :H//2] = torch.roll(inputs[half_batch_size:, :, W//2:, :H//2], 1, 0)
             inputs[half_batch_size:, :, :W//2, H//2:] = torch.roll(inputs[half_batch_size:, :, :W//2, H//2:], 2, 0)
             inputs[half_batch_size:, :, W//2:, H//2:] = torch.roll(inputs[half_batch_size:, :, W//2:, H//2:], 3, 0)
@@ -99,7 +103,8 @@ class DisMaxLossSecondPart(nn.Module):
             else: # regularization                                
                 probabilities_at_targets = probabilities_for_training[range(half_batch_size), targets[:half_batch_size]]
                 loss_not_regularized = -torch.log(probabilities_at_targets).mean()
-                if self.regularization == "fractional_probability":
+                if self.regularization == "fpr":
+                    print("fpr2")
                     targets_one_hot_0 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 0, 0)].long().cuda()
                     targets_one_hot_1 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 1, 0)].long().cuda()
                     targets_one_hot_2 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 2, 0)].long().cuda()

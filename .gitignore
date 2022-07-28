@@ -1,6 +1,7 @@
 __pycache__
 data/*/
 temp/
+old/
 results_raw.csv
 checkpoint/
 .vscode/

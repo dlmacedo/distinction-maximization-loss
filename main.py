@@ -11,6 +11,7 @@ import torch.optim
 import torch.utils.data
 import agents
 import utils
+from torchvision.transforms.functional import InterpolationMode
 
 numpy.set_printoptions(edgeitems=5, linewidth=160, formatter={'float': '{:0.6f}'.format})
 torch.set_printoptions(edgeitems=5, precision=6, linewidth=160)
@@ -55,6 +56,7 @@ def main():
     print("***************************************************************")
 
     print("seed", args.seed)
+    cudnn.benchmark = True
     if args.executions == 1:
         cudnn.deterministic = True
         print("Deterministic!!!")
@@ -68,7 +70,6 @@ def main():
     print('__Number CUDA Devices:', torch.cuda.device_count())
     print('Active CUDA Device: GPU', torch.cuda.current_device())
 
-    #all_experiment_results = {}
     for args.exp_input in args.exps_inputs:
         for args.exp_type in args.exps_types:
             for args.exp_config in args.exps_configs:
@@ -108,6 +109,18 @@ def main():
                 elif args.dataset == "cifar100":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 100
                     args.data_type = "image"
+                elif args.dataset == "tinyimagenet":
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 200
+                    args.data_type = "image"
+                elif args.dataset == "imagenet1k":
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
+                    args.data_type = "image"
+
+                if args.model_name == "resnet18":
+                    args.input_size = 224
+                    args.DEFAULT_CROP_RATIO = 0.875
+                    args.interpolation = InterpolationMode.BILINEAR
+
                 print("***************************************************************")
 
                 for args.execution in range(1, args.executions + 1):
@@ -120,8 +133,9 @@ def main():
                     cnn_agent = agents.ClassifierAgent(args)
                     if args.exp_type == "train_classify":
                         cnn_agent.train_classify()
-                    elif args.exp_type == "extract_ood_logits_metrics":
-                        cnn_agent.extract_ood_logits_metrics()
+                    #elif args.exp_type == "extract_ood_logits_metrics":
+                    #    cnn_agent.extract_ood_logits_metrics()
+                    print()
 
                 experiment_results = pd.read_csv(os.path.join(os.path.join(args.experiment_path, "results_best.csv")))
                 print("\n################################\n", "EXPERIMENT RESULTS", "\n################################")

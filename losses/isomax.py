@@ -18,6 +18,9 @@ class IsoMaxLossFirstPart(nn.Module):
         # The temperature may be calibrated after training to improve uncertainty estimation.
         return logits / self.temperature
 
+    def extra_repr(self):
+        return 'num_features={}, num_classes={}'.format(self.num_features, self.num_classes)
+
 
 class IsoMaxLossSecondPart(nn.Module):
     """This part replaces the nn.CrossEntropyLoss()"""

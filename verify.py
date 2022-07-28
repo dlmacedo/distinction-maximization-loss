@@ -9,12 +9,13 @@ from torchvision import transforms
 import numpy
 import models
 import torchmetrics
+import timm
 
 numpy.set_printoptions(edgeitems=5, linewidth=160, formatter={'float': '{:0.6f}'.format})
 torch.set_printoptions(edgeitems=5, precision=6, linewidth=160)
 
 parser = argparse.ArgumentParser(description='OOD Performance Estimation Verifier')
-parser.add_argument('--batch_size', type=int, default=64, metavar='N', help='batch size for data loader')
+parser.add_argument('-bs', '--batch_size', type=int, default=64, metavar='N', help='batch size for data loader')
 parser.add_argument('--dataset', required=True, help='cifar10 | cifar100 | tinyimagenet')
 parser.add_argument('--dataroot', default='data', help='path to dataset')
 parser.add_argument('--net_type', required=True, help='resnet | wideresnet')
@@ -49,6 +50,8 @@ def main():
         args.num_classes = 100
     elif args.dataset == 'tinyimagenet':
         args.num_classes = 200
+    elif args.dataset == 'imagenet1k':
+        args.num_classes = 1000
     else:
         args.num_classes = 10
 
@@ -56,6 +59,10 @@ def main():
         out_dist_list = ['cifar100', 'imagenet_resize', 'lsun_resize', 'svhn']
     elif args.dataset == 'cifar100':
         out_dist_list = ['cifar10', 'imagenet_resize', 'lsun_resize', 'svhn']
+    elif args.dataset == 'tinyimagenet':
+        out_dist_list = ['imagenet-o-64', 'cifar10_64', 'cifar100_64', 'svhn_64']
+    elif args.dataset == 'imagenet1k':
+        out_dist_list = ['imagenet-o']
 
     if args.dataset == 'cifar10':
         in_transform = transforms.Compose([
@@ -65,23 +72,26 @@ def main():
         in_transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.507, 0.486, 0.440), (0.267, 0.256, 0.276))])
+    elif args.dataset == 'tinyimagenet':
+        in_transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
+    elif args.dataset == 'imagenet1k':
+        args.dataroot = '/mnt/ssd/imagenet1k'
+        args.input_size = 224
+        args.DEFAULT_CROP_RATIO = 0.875
+        in_transform = transforms.Compose([
+            transforms.Resize(int(args.input_size / args.DEFAULT_CROP_RATIO)),
+            transforms.CenterCrop(args.input_size),
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
 
     for args.execution in range(1, args.executions + 1):    
         print("\nEXECUTION:", args.execution)
         pre_trained_net = os.path.join(dir_path, "model" + str(args.execution) + ".pth")
 
-        if args.loss.split("_")[0] == "softmax":
-            loss_first_part = losses.SoftMaxLossFirstPart
-            scores = ["ES"]
-        elif args.loss.split("_")[0] == "isomax":
-            loss_first_part = losses.IsoMaxLossFirstPart
-            scores = ["ES"]
-        elif args.loss.split("_")[0] == "isomaxplus":
-            loss_first_part = losses.IsoMaxPlusLossFirstPart
-            scores = ["MDS"]
-        elif args.loss.split("_")[0] == "dismax":
-            loss_first_part = losses.DisMaxLossFirstPart
-            scores = ["MMLES"]
+        loss_first_part = losses.DisMaxLossFirstPart
+        scores = ["MMLES"]
 
         # load networks
         if args.net_type == 'resnet34':
@@ -90,6 +100,10 @@ def main():
             model = models.DenseNet3(100, int(args.num_classes), loss_first_part=loss_first_part)
         elif args.net_type == "wideresnet2810":
             model = models.Wide_ResNet(depth=28, widen_factor=10, num_classes=args.num_classes, loss_first_part=loss_first_part)
+        elif args.net_type == "resnet18":
+            model = timm.create_model('resnet18', pretrained=False)
+            num_in_features = model.get_classifier().in_features
+            model.fc = loss_first_part(num_in_features, args.num_classes)
         model.load_state_dict(torch.load(pre_trained_net, map_location="cuda:" + str(args.gpu)))
         model.cuda()
         print('load model: ' + args.net_type)

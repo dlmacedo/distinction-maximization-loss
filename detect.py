@@ -7,6 +7,8 @@ import losses
 import data_loader
 import calculate_log as callog
 from torchvision import transforms
+import timm
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description='OOD Detector')
 parser.add_argument('-bs', '--batch-size', type=int, default=64, metavar='N', help='batch size for data loader')
@@ -50,11 +52,21 @@ def main():
     elif args.dataset == 'cifar100':
         args.num_classes = 100
         args.data_type = "image"
+    elif args.dataset == 'tinyimagenet':
+        args.num_classes = 200
+        args.data_type = "image"
+    elif args.dataset == 'imagenet1k':
+        args.num_classes = 1000
+        args.data_type = "image"
 
     if args.dataset == 'cifar10':
         out_dist_list = ['cifar100', 'imagenet_resize', 'lsun_resize', 'svhn']
     elif args.dataset == 'cifar100':
         out_dist_list = ['cifar10', 'imagenet_resize', 'lsun_resize', 'svhn']
+    elif args.dataset == 'tinyimagenet':
+        out_dist_list = ['imagenet-o-64', 'cifar10_64', 'cifar100_64', 'svhn_64']
+    elif args.dataset == 'imagenet1k':
+        out_dist_list = ['imagenet-o']
 
     if args.dataset == 'cifar10':
         in_transform = transforms.Compose([
@@ -64,6 +76,19 @@ def main():
         in_transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.507, 0.486, 0.440), (0.267, 0.256, 0.276))])
+    elif args.dataset == 'tinyimagenet':
+        in_transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
+    elif args.dataset == 'imagenet1k':
+        args.dataroot = '/mnt/ssd/imagenet1k'
+        args.input_size = 224
+        args.DEFAULT_CROP_RATIO = 0.875
+        in_transform = transforms.Compose([
+            transforms.Resize(int(args.input_size / args.DEFAULT_CROP_RATIO)),
+            transforms.CenterCrop(args.input_size),
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
 
     for args.execution in range(1, args.executions + 1):    
         print("\nEXECUTION:", args.execution)
@@ -89,6 +114,10 @@ def main():
             model = models.DenseNet3(100, int(args.num_classes), loss_first_part=loss_first_part)
         elif args.net_type == "wideresnet2810":
             model = models.Wide_ResNet(depth=28, widen_factor=10, num_classes=args.num_classes, loss_first_part=loss_first_part)
+        elif args.net_type == "resnet18":
+            model = timm.create_model('resnet18', pretrained=False)
+            num_in_features = model.get_classifier().in_features
+            model.fc = loss_first_part(num_in_features, args.num_classes)
         model.load_state_dict(torch.load(pre_trained_net, map_location="cuda:" + str(args.gpu)))
         model.cuda()
         print('load model: ' + args.net_type)
@@ -154,7 +183,7 @@ def get_scores(args, model, test_loader, outf, out_flag, score_type=None):
     g = open(temp_file_name_val, 'w')
     f = open(temp_file_name_test, 'w')
 
-    for batch_index, batch_data in enumerate(test_loader):
+    for batch_index, batch_data in enumerate(tqdm(test_loader)):
         data = batch_data[0]
         batch_size = data.size(0)
 

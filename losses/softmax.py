@@ -19,6 +19,9 @@ class SoftMaxLossFirstPart(nn.Module):
         # The temperature may be calibrated after training to improve uncertainty estimation.
         return logits / self.temperature
 
+    def extra_repr(self):
+        return 'num_features={}, num_classes={}, bias={}'.format(self.num_features, self.num_classes, self.bias is not None)
+
 
 class SoftMaxLossSecondPart(nn.Module):
     def __init__(self, model_classifier):

@@ -9,9 +9,13 @@ import torch
 import metrics
 import numpy as np
 import scipy.optimize as opt
+import timm
+import torch.nn.functional as F
+from torchvision.transforms.functional import InterpolationMode
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description='Calibrator')
-parser.add_argument('--batch_size', type=int, default=64, metavar='N', help='batch size for data loader')
+parser.add_argument('-bs', '--batch_size', type=int, default=64, metavar='N', help='batch size for data loader')
 parser.add_argument('--dataset', required=True, help='cifar10 | cifar100 | tinyimagenet')
 parser.add_argument('--dataroot', default='data', help='path to dataset')
 parser.add_argument('--net_type', required=True, help='resnet | wideresnet')
@@ -42,8 +46,19 @@ def main():
     # define number of classes
     if args.dataset == 'cifar100':
         args.num_classes = 100
+    elif args.dataset == 'imagenet1k':
+        args.num_classes = 1000
+    elif args.dataset == 'tinyimagenet':
+        args.num_classes = 200
     else:
         args.num_classes = 10
+    
+    ###################################################
+    if args.net_type == "resnet18":
+        args.input_size = 224
+        args.DEFAULT_CROP_RATIO = 0.875
+        args.interpolation = InterpolationMode.BILINEAR
+    ###################################################
 
     image_loaders = loaders.ImageLoader(args)
     _, _, testloader = image_loaders.get_loaders()
@@ -68,10 +83,16 @@ def main():
             net_trained = models.DenseNet3(100, int(args.num_classes), loss_first_part=loss_first_part)
         elif args.net_type == "wideresnet2810":
             net_trained = models.Wide_ResNet(depth=28, widen_factor=10, num_classes=args.num_classes, loss_first_part=loss_first_part)
+        #######################################################################
+        elif args.net_type == "resnet18":
+            net_trained = timm.create_model('resnet18', pretrained=False)
+            num_in_features = net_trained.get_classifier().in_features
+            net_trained.fc = loss_first_part(num_in_features, args.num_classes)
+        #######################################################################
         net_trained.load_state_dict(torch.load(pre_trained_net, map_location="cuda:" + str(args.gpu)))
         net_trained.eval()
-        print('load net_trained: ' + args.net_type)
-        
+        print('loaded net_trained: ' + args.net_type)
+
         ece_criterion = metrics.ECELoss()
 
         # First: collect all the logits and labels for the validation set
@@ -80,7 +101,8 @@ def main():
         model = net_trained.cuda()
 
         with torch.no_grad():
-            for input, label in testloader:
+            #for input, label in testloader:
+            for input, label in tqdm(testloader):
                 input = input.cuda()
                 logits = model(input)
                 logits_list.append(logits)

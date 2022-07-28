@@ -1,5 +1,3 @@
-torch
-torchvision
 torchmetrics
 torchnet
 numpy
@@ -9,3 +7,5 @@ scikit-learn
 matplotlib
 seaborn
 tqdm
+timm
+opencv-python
