@@ -65,7 +65,6 @@ class ImageLoader:
             self.trainset_for_train = ImageFolder(self.train_path, transform=self.train_transform)
             self.trainset_for_infer = ImageFolder(self.train_path, transform=self.inference_transform)
             self.val_set = ImageFolder(self.val_path, transform=self.inference_transform)
-            #self.outlier_data = None
 
         elif args.dataset == "imagenet1k":
             self.normalize = transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))

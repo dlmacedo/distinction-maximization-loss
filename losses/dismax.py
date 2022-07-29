@@ -76,7 +76,7 @@ class DisMaxLossSecondPart(nn.Module):
         inputs = inputs[idx].view(inputs.size())
         targets = targets[idx].view(targets.size())
         if self.regularization == "fpr":
-            print("fpr1")
+            print("fpr_aug")
             inputs[half_batch_size:, :, W//2:, :H//2] = torch.roll(inputs[half_batch_size:, :, W//2:, :H//2], 1, 0)
             inputs[half_batch_size:, :, :W//2, H//2:] = torch.roll(inputs[half_batch_size:, :, :W//2, H//2:], 2, 0)
             inputs[half_batch_size:, :, W//2:, H//2:] = torch.roll(inputs[half_batch_size:, :, W//2:, H//2:], 3, 0)
@@ -104,7 +104,7 @@ class DisMaxLossSecondPart(nn.Module):
                 probabilities_at_targets = probabilities_for_training[range(half_batch_size), targets[:half_batch_size]]
                 loss_not_regularized = -torch.log(probabilities_at_targets).mean()
                 if self.regularization == "fpr":
-                    print("fpr2")
+                    print("fpr_reg")
                     targets_one_hot_0 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 0, 0)].long().cuda()
                     targets_one_hot_1 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 1, 0)].long().cuda()
                     targets_one_hot_2 = torch.eye(num_classes)[torch.roll(targets[half_batch_size:], 2, 0)].long().cuda()
