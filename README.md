@@ -1,18 +1,16 @@
 # Distinction Maximization Loss (DisMax)
 
-## Efficiently Improving Uncertainty Estimation and Out-of-Distribution Detection by Simply Replacing the Loss and Calibrating
+## Efficiently Improving Out-of-Distribution Detection and Uncertainty Estimation by Replacing the Loss and Calibrating
 
 >>**We keep single network inference efficiency. No hyperparameter tuning. We need to train only once. SOTA.**
 
-Building robust deterministic neural networks remains a challenge. On the one hand, some approaches improve out-of-distribution detection at the cost of reducing classification accuracy in some situations. On the other hand, some methods simultaneously increase classification accuracy, uncertainty estimation, and out-of-distribution detection at the expense of reducing the inference efficiency. In this paper, we propose training deterministic neural networks using our DisMax loss, which works as a drop-in replacement for the usual SoftMax loss (i.e., the combination of the linear output layer, the SoftMax activation, and the cross-entropy loss). Starting from the IsoMax+ loss, we create each logit based on the distances to all prototypes, rather than just the one associated with the correct class. We also introduce a mechanism to combine images to construct what we call fractional probability regularization. Moreover, we present a fast way to calibrate the network after training. Finally, we propose a composite score to perform out-of-distribution detection. Our experiments show that DisMax usually outperforms current approaches simultaneously in classification accuracy, uncertainty estimation, and out-of-distribution detection while maintaining deterministic neural network inference efficiency. The code to reproduce the results is available.
-
->>**Read the full paper: [Distinction Maximization Loss: Efficiently Improving Uncertainty Estimation and Out-of-Distribution Detection by Simply Replacing the Loss and Calibrating](https://arxiv.org/abs/2205.05874).**
+>>**Read the full paper: [Distinction Maximization Loss: Efficiently Improving Out-of-Distribution Detection and Uncertainty Estimation by Replacing the Loss and Calibrating](https://arxiv.org/abs/2205.05874).**
 
 >>**Visit also the repository of our previous work: [Entropic Out-of-Distribution Detection](https://github.com/dlmacedo/entropic-out-of-distribution-detection).**
 
 >> ## **Train on CIFAR10, CIFAR100, TinyImageNet, and ImageNet.**
 
-<img align="center" src="assets/results.png" width="750">
+<img align="center" src="assets/table.PNG" width="750">
 
 ___
 
@@ -118,7 +116,9 @@ Please, cite our papers if you use our loss in your works:
 
 ```bibtex
 @article{macedo2022distinction,
-      title={Distinction Maximization Loss: Efficiently Improving Uncertainty Estimation and Out-of-Distribution Detection by Simply Replacing the Loss and Calibrating}, 
+      title={Distinction Maximization Loss: Efficiently Improving
+      Out-of-Distribution Detection and Uncertainty Estimation
+      by Replacing the Loss and Calibrating}, 
       author={David Macêdo and Cleber Zanchettin and Teresa Ludermir},
       year={2022},
       eprint={2205.05874},
