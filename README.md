@@ -116,13 +116,12 @@ Please, cite our papers if you use our loss in your works:
 
 ```bibtex
 @article{macedo2022distinction,
-      title={Distinction Maximization Loss: Efficiently Improving
-      Out-of-Distribution Detection and Uncertainty Estimation
-      by Replacing the Loss and Calibrating}, 
-      author={David Macêdo and Cleber Zanchettin and Teresa Ludermir},
-      year={2022},
-      eprint={2205.05874},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
+  title={Distinction Maximization Loss: Efficiently Improving
+  Out-of-Distribution Detection and Uncertainty Estimation
+  by Replacing the Loss and Calibrating}, 
+  author={David Macêdo and Cleber Zanchettin and Teresa Ludermir},
+  year={2022},
+  eprint={2205.05874},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG}}
 ```
