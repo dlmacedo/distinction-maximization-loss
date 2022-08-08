@@ -126,9 +126,10 @@ def main():
         print("Temperature for Min ECE", temperature_for_min_ece[0])
         print("########################################")
 
-        with open(file_path, "a") as results_file:
-            results_file.write("{},{},{},{},{},{}\n".format(
-                str(args.execution), args.net_type, args.dataset, str(args.loss), min_ece, temperature_for_min_ece[0]))
+        if 0.001 < temperature_for_min_ece[0] < 100:
+            with open(file_path, "a") as results_file:
+                results_file.write("{},{},{},{},{},{}\n".format(
+                    str(args.execution), args.net_type, args.dataset, str(args.loss), min_ece, temperature_for_min_ece[0]))
 
 
 if __name__ == '__main__':
