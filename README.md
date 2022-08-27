@@ -4,6 +4,8 @@
 
 ---
 
+<img align="center" src="assets/dismax.png" width="750">
+
 # Distinction Maximization Loss (DisMax)
 
 ## Efficiently Improving Out-of-Distribution Detection and Uncertainty Estimation by Replacing the Loss and Calibrating
@@ -16,7 +18,7 @@
 
 >> ## **Train on CIFAR10, CIFAR100, TinyImageNet, and ImageNet.**
 
-<img align="center" src="assets/table.PNG" width="750">
+<img align="center" src="assets/table.png" width="750">
 
 ___
 
