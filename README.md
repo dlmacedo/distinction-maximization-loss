@@ -1,3 +1,7 @@
+# **Visit "The Robust Deep Learning Library" (our newest work) to use this loss and much more easily:**
+
+# **[The Robust Deep Learning Library](https://github.com/dlmacedo/robust-deep-learning)**
+
 # Distinction Maximization Loss (DisMax)
 
 ## Efficiently Improving Out-of-Distribution Detection and Uncertainty Estimation by Replacing the Loss and Calibrating
