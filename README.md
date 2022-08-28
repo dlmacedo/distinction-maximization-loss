@@ -20,8 +20,6 @@
 
 <img align="center" src="assets/table.png" width="750">
 
-___
-
 # Use DisMax in your project!!!
 
 ## Replace the SoftMax loss with the DisMax loss changing few lines of code!
@@ -67,8 +65,6 @@ scores = model.classifier.scores(outputs)
 ```
 python example.py
 ```
-
-___
 
 # Code
 
@@ -128,5 +124,6 @@ Please, cite our papers if you use our loss in your works:
   year={2022},
   eprint={2205.05874},
   archivePrefix={arXiv},
-  primaryClass={cs.LG}}
+  primaryClass={cs.LG}
+}
 ```
