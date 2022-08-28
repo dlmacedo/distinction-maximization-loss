@@ -18,12 +18,12 @@
 
 ## Results
 
-### Dataset=ImageNet, Model=ResNet18, Near OOD=ImageNet-O, Far OOD=XXXXXXXXX 
+### Dataset=ImageNet, Model=ResNet18, Near OOD=ImageNet-O 
 
-| Loss [Score] | Class (ACC) | Near OOD (AUROC) | Far OOD (AUROC) |
-|:---|:---:|:---:|:---:|
-| Cross-Entropy [MPS] | 69.9 | 52.4 | 00.0 |
-| DisMax [MMLES] | 69.6 | 75.8 | 00.0 |
+| Loss [Score] | Class (ACC) | Near OOD (AUROC) |
+|:---|:---:|:---:|
+| Cross-Entropy [MPS] | 69.9 | 52.4 |
+| DisMax [MMLES] | 69.6 | 75.8 |
 
 ### Dataset=CIFAR
 
