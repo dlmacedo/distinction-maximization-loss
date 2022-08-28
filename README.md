@@ -14,8 +14,6 @@
 
 >>**Read the full paper: [Distinction Maximization Loss: Efficiently Improving Out-of-Distribution Detection and Uncertainty Estimation by Replacing the Loss and Calibrating](https://arxiv.org/abs/2205.05874).**
 
->>**Visit also the repository of our previous work: [Entropic Out-of-Distribution Detection](https://github.com/dlmacedo/entropic-out-of-distribution-detection).**
-
 >> ## **Train on CIFAR10, CIFAR100, and ImageNet.**
 
 <img align="center" src="assets/table.png" width="750">
