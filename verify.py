@@ -16,7 +16,7 @@ torch.set_printoptions(edgeitems=5, precision=6, linewidth=160)
 
 parser = argparse.ArgumentParser(description='OOD Performance Estimation Verifier')
 parser.add_argument('-bs', '--batch_size', type=int, default=64, metavar='N', help='batch size for data loader')
-parser.add_argument('--dataset', required=True, help='cifar10 | cifar100 | tinyimagenet')
+parser.add_argument('--dataset', required=True, help='cifar10 | cifar100 | imagenet1k')
 parser.add_argument('--dataroot', default='data', help='path to dataset')
 parser.add_argument('--net_type', required=True, help='resnet | wideresnet')
 parser.add_argument('--gpu', type=int, default=0, help='gpu index')
@@ -48,8 +48,6 @@ def main():
     # define number of classes
     if args.dataset == 'cifar100':
         args.num_classes = 100
-    elif args.dataset == 'tinyimagenet':
-        args.num_classes = 200
     elif args.dataset == 'imagenet1k':
         args.num_classes = 1000
     else:
@@ -59,8 +57,6 @@ def main():
         out_dist_list = ['cifar100', 'imagenet_resize', 'lsun_resize', 'svhn']
     elif args.dataset == 'cifar100':
         out_dist_list = ['cifar10', 'imagenet_resize', 'lsun_resize', 'svhn']
-    elif args.dataset == 'tinyimagenet':
-        out_dist_list = ['imagenet-o-64', 'cifar10_64', 'cifar100_64', 'svhn_64']
     elif args.dataset == 'imagenet1k':
         out_dist_list = ['imagenet-o']
 
@@ -72,10 +68,6 @@ def main():
         in_transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.507, 0.486, 0.440), (0.267, 0.256, 0.276))])
-    elif args.dataset == 'tinyimagenet':
-        in_transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
     elif args.dataset == 'imagenet1k':
         args.dataroot = '/mnt/ssd/imagenet1k'
         args.input_size = 224

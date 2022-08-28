@@ -46,30 +46,10 @@ class ImageLoader:
             self.trainset_for_infer = torchvision.datasets.CIFAR100(root=self.dataset_path, train=True, download=True, transform=self.inference_transform)
             self.val_set = torchvision.datasets.CIFAR100(root=self.dataset_path, train=False, download=True, transform=self.inference_transform)
 
-        elif args.dataset == "tinyimagenet":
-            #self.normalize = transforms.Normalize(mean=[0.4802, 0.4481, 0.3975], std=[0.2302, 0.2265, 0.2262])
-            self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            self.train_transform = transforms.Compose([
-                transforms.RandomCrop(64, padding=8),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                self.normalize,
-                ])
-            self.inference_transform = transforms.Compose([
-                transforms.ToTensor(),
-                self.normalize,
-                ])
-            self.dataset_path = "data/tiny-imagenet-200"
-            self.train_path = os.path.join(self.dataset_path, 'train')
-            self.val_path = os.path.join(self.dataset_path, 'val')
-            self.trainset_for_train = ImageFolder(self.train_path, transform=self.train_transform)
-            self.trainset_for_infer = ImageFolder(self.train_path, transform=self.inference_transform)
-            self.val_set = ImageFolder(self.val_path, transform=self.inference_transform)
-
         elif args.dataset == "imagenet1k":
             self.normalize = transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
             self.train_transform = transforms.Compose([
-                transforms.RandomResizedCrop(args.input_size, ratio=(3/4, 4/3), interpolation=args.interpolation),
+                transforms.RandomResizedCrop(args.input_size, interpolation=args.interpolation),
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
                 self.normalize,])

@@ -109,9 +109,6 @@ def main():
                 elif args.dataset == "cifar100":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 100
                     args.data_type = "image"
-                elif args.dataset == "tinyimagenet":
-                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 200
-                    args.data_type = "image"
                 elif args.dataset == "imagenet1k":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
                     args.data_type = "image"

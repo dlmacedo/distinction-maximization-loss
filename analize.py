@@ -23,7 +23,7 @@ torch.cuda.manual_seed(1234)
 
 def main():
 
-    DATASETS = ['cifar10', 'cifar100', 'tinyimagenet','imagenet1k']
+    DATASETS = ['cifar10', 'cifar100', 'imagenet1k']
     MODELS = ['densenetbc100', 'resnet34', 'wideresnet2810','resnet18'] 
     LOSSES = ['softmax_std_std_std', 'isomax_std_std_std', 'isomaxplus_std_std_std','dismax_std_std_std', 'dismax_std_std_noreg','dismax_std_std_0.5']
 
@@ -115,11 +115,7 @@ def main():
                 best_results_data_frame['IN-DATA'].isin([data]) &
                 best_results_data_frame['MODEL'].isin([model]) &
                 best_results_data_frame['SCORE'].isin(["MPS","ES","MDS","MMLS","MMLES","MLES","MMLEPS"]) &
-                best_results_data_frame['OUT-DATA'].isin(
-                    ['svhn','lsun_resize','imagenet_resize','cifar10', 'cifar100',
-                    'svhn_64', 'cifar10_64', 'cifar100_64', 'lsun_resize_64', 'imagenet-o-64', 'imagenet-o',
-                    'imdb','multi30k','yelprf'])
-                ]
+                best_results_data_frame['OUT-DATA'].isin(['svhn','lsun_resize','imagenet_resize','cifar10', 'cifar100', 'imagenet-o'])]
 
             #############################################################################################################################
             #############################################################################################################################
@@ -136,8 +132,6 @@ def main():
                 dfx = df.loc[df['OUT-DATA'].isin(['cifar100','imagenet_resize','lsun_resize','svhn'])]
             elif data == 'cifar100':
                 dfx = df.loc[df['OUT-DATA'].isin(['cifar10','imagenet_resize','lsun_resize','svhn'])]
-            elif data == 'tinyimagenet':
-                dfx = df.loc[df['OUT-DATA'].isin(['imagenet-o-64','cifar10_64','cifar100_64','svhn_64'])]
             elif data == 'imagenet1k':
                 dfx = df.loc[df['OUT-DATA'].isin(['imagenet-o'])]
             #############################################################################################################################
@@ -160,8 +154,6 @@ def main():
                 dfx = df.loc[df['OUT-DATA'].isin(['cifar100','imagenet_resize','lsun_resize','svhn'])]
             elif data == 'cifar100':
                 dfx = df.loc[df['OUT-DATA'].isin(['cifar10','imagenet_resize','lsun_resize','svhn'])]
-            elif data == 'tinyimagenet':
-                dfx = df.loc[df['OUT-DATA'].isin(['imagenet-o-64','cifar10_64', 'cifar100_64','svhn_64'])]
             elif data == 'imagenet1k':
                 dfx = df.loc[df['OUT-DATA'].isin(['imagenet-o'])]
             #############################################################################################################################

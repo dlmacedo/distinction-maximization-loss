@@ -16,7 +16,7 @@ from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description='Calibrator')
 parser.add_argument('-bs', '--batch_size', type=int, default=64, metavar='N', help='batch size for data loader')
-parser.add_argument('--dataset', required=True, help='cifar10 | cifar100 | tinyimagenet')
+parser.add_argument('--dataset', required=True, help='cifar10 | cifar100 | imagenet1k')
 parser.add_argument('--dataroot', default='data', help='path to dataset')
 parser.add_argument('--net_type', required=True, help='resnet | wideresnet')
 parser.add_argument('--gpu', type=int, default=0, help='gpu index')
@@ -48,8 +48,6 @@ def main():
         args.num_classes = 100
     elif args.dataset == 'imagenet1k':
         args.num_classes = 1000
-    elif args.dataset == 'tinyimagenet':
-        args.num_classes = 200
     else:
         args.num_classes = 10
     

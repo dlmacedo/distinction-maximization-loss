@@ -9,7 +9,6 @@ import math
 import torchnet as tnt
 import numpy as np
 import utils
-from torchvision import transforms
 import timm
 
 class ClassifierAgent:

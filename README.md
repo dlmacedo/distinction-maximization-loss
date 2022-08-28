@@ -16,7 +16,7 @@
 
 >>**Visit also the repository of our previous work: [Entropic Out-of-Distribution Detection](https://github.com/dlmacedo/entropic-out-of-distribution-detection).**
 
->> ## **Train on CIFAR10, CIFAR100, TinyImageNet, and ImageNet.**
+>> ## **Train on CIFAR10, CIFAR100, and ImageNet.**
 
 <img align="center" src="assets/table.png" width="750">
 
@@ -89,7 +89,7 @@ pip install -r requirements.txt
 ```bash
 # Download and prepare out-of-distrbution data for CIFAR10 and CIFAR100 datasets.
 ./prepare_cifar.sh
-# Download and prepare out-of-distrbution data for TinyImageNet and ImageNet.
+# Download and prepare out-of-distrbution data for ImageNet.
 ./prepare_imagenet.sh
 ```
 
@@ -104,9 +104,6 @@ pip install -r requirements.txt
 ./run_cifar10_densenetbc100.sh*
 ./run_cifar10_resnet34.sh*
 ./run_cifar10_wideresnet2810.sh*
-./run_tinyimagenet_densenetbc100.sh*
-./run_tinyimagenet_resnet34.sh*
-./run_tinyimagenet_wideresnet2810.sh*
 ./run_imagenet1k_resnet18.sh*
 ```
 
