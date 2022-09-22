@@ -112,12 +112,12 @@ pip install -r requirements.txt
 ./run_imagenet1k_resnet18.sh*
 ```
 
-## Analizing the results
+## Analyzing the results
 
 ### Print the experiment results:
 
 ```bash
-./analize.sh
+./analyze.sh
 ```
 
 # Citation
